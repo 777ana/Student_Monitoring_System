@@ -34,14 +34,14 @@ def register(request):
 
 
 def login(request):
-    if request.method=='POST':
+    if request.method == 'POST':
         password = request.POST['password']
         username = request.POST['username']
 
-        user=auth.authenticate(username=username, password=password)
+        user = auth.authenticate(username=username, password=password)
         if user is not None:
             auth.login(request, user)
-            return redirect('/')
+            return render(request, 'dashboard.html')
         else:
             messages.info(request, 'invalid credentials')
             return redirect('login')

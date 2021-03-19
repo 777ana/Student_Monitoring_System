@@ -7,12 +7,12 @@
 <body>
 <h1>Student Monitoring System</h1>
 
-    {% if user.is_authenticated %}
-    <p>Hello, {{ user.first_name }}</p>
-    <button><a href="/accounts/logout">Logout</a></button>
-    {% else %}
+{#    {% if user.is_authenticated %}#}
+{#    <p>Hello, {{ user.first_name }}</p>#}
+{#    <button><a href="/accounts/logout">Logout</a></button>#}
+{#    {% else %}#}
     <button><a href="/accounts/register">Register</a></button>
     <button><a href="/accounts/login">Login</a></button>
-    {% endif %}
+{#    {% endif %}#}
 </body>
 </html>
