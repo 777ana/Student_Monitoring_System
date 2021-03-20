@@ -24,7 +24,7 @@ the foundation of our suggestion algorithm. From this test we will get to know t
 student's initial field of interests.This could help in analysing his/her personality &
 cognitive skills.<br />
 
-###Required Software Technologies:<br />
+### Required Software Technologies:<br />
 1. HTML
 2. CSS
 3. Bootstrap
