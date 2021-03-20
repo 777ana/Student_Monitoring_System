@@ -16,16 +16,16 @@
         {% for i in exam %}
             <hr>
             <p>{{ i.id }}) {{ i.question }}</p>
-            <input type="radio" name="{{ i.id }}" id="{{ i.option1 }}"  value="{{ i.option1 }}">
+            <input type="radio" name="{{ i.id }}" required id="{{ i.option1 }}"  value="{{ i.option1 }} ">
             <label for="{{ i.option1 }}">{{ i.option1 }}</label><br>
-            <input type="radio" name="{{ i.id }}" id="{{ i.option2 }}"  value="{{ i.option2 }}">
+            <input type="radio" name="{{ i.id }}" required id="{{ i.option2 }}"  value="{{ i.option2 }}">
             <label for="{{ i.option2 }}">{{ i.option2 }}</label><br>
             {% if i.option3 %}
-                <input type="radio" name="{{ i.id }}" id="{{ i.option3 }}"  value="{{ i.option3 }}">
+                <input type="radio" name="{{ i.id }}" required id="{{ i.option3 }}"  value="{{ i.option3 }}">
             <label for="{{ i.option3 }}">{{ i.option3 }}</label><br>
             {% endif %}
             {% if i.option4 %}
-                <input type="radio" name="{{ i.id }}" id="{{ i.option4 }}"  value="{{ i.option4 }}">
+                <input type="radio" name="{{ i.id }}" required id="{{ i.option4 }}"  value="{{ i.option4 }}">
             <label for="{{ i.option4 }}">{{ i.option4 }}</label>
                 <br>
             {% endif %}
@@ -35,6 +35,27 @@
 
     </form>
 {% else %}
+    <script>
+$(function(){
+    var validator = $("#form").kendoValidator({
+        rules: {
+            radio: function(input) {
+                if (input.filter("[type=radio]") && input.attr("required")) {
+                    return $("#form").find("[type=radio][name=" + input.attr("name") + "]").is(":checked");
+                }
+                return true;
+            }
+        },
+        messages: {
+            radio: "This is a required field"
+        }
+    }).getKendoValidator();
+
+    $("#post").click(function() {
+        validator.validate();
+    });
+});
+</script>
     <button><a href="/accounts/register">Register</a></button>
     <button><a href="/accounts/login">Login</a></button>
     {% endif %}
