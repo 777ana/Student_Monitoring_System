@@ -28,7 +28,7 @@ big role in suggesting major related courses.<br/>
 * Further, we can help students by suggesting the right career path for them.<br/>
 
 
-_Following are the steps taken into the consideration:_<br />
+### Working:<br />
 
 i. To establish a baseline the student will be taking a self assessment test, which will lay
    the foundation of our suggestion algorithm. From this test we will get to know the
