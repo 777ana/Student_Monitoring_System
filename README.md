@@ -1,6 +1,32 @@
-# Student Monitoring System<br />
-This project helps in showing ability of students on the basis of how they performed
-in the test provided by us.
+# AI Based Student Monitoring System<br />
+
+### Introduction:<br />
+
+To suggest and evaluate the effective teaching methodologies, educational institutions should
+regularly perform tracking of dozens of indicators related to the academic performance of their
+students. Considering the complex nature of modern education, it’s barely possible to complete
+such a task manually. Fortunately, assessment apps allow educational institutions to monitor,
+visualize, and analyze the efficiency of education with ease. An approach based on data
+tracking and analysis helps to define if there’s the need to change the used studying programs
+for making better decisions and achieving better academic results. In addition to academic
+performance the co-curriculars and volunteer work performed by students must also be taken
+into consideration to get a more comprehensive assessment of potential employability and
+opportunities. All this added with interests displayed by students and their commitment to them
+can give a better evaluation than standard methods.
+
+### Objectives: <br />
+
+* If we consider our new education policy, this project can help students in choosing
+electives related to their field of interest. Eg. In the US education system, students need
+to decide their major after completing 2 years of graduation. Here, our project can play a
+big role in suggesting major related courses.<br/>
+
+* It helps our CDGC for screening students for specific profiles.<br/>
+
+* Also, students can target specific companies (which will be suggested by our app).<br/>
+
+* Further, we can help students by suggesting the right career path for them.<br/>
+
 
 _Following are the steps taken into the consideration:_<br />
 
