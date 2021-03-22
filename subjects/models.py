@@ -1,19 +1,12 @@
+from django.contrib.auth.models import User
 from django.db import models
-from django.contrib.auth.models import User, auth
+from jsonfield import JSONField
 
 
 # Create your models here.
 
-class test(models.Model):
-    question = models.CharField(max_length=500)
-    option1 = models.CharField(max_length=200)
-    option2 = models.CharField(max_length=200)
-    option3 = models.CharField(max_length=200, null=True)
-    option4 = models.CharField(max_length=200, null=True)
-
-
-class student_score(models.Model):
-    student = models.ForeignKey(User, on_delete=models.CASCADE)
+class subject(models.Model):
+    subject_name = models.CharField(max_length=200)
     organised = models.BooleanField(default=False)
     stubborn = models.BooleanField(default=False)
     introvert = models.BooleanField(default=False)
@@ -36,3 +29,8 @@ class student_score(models.Model):
     path_finding = models.BooleanField(default=False)
     space = models.BooleanField(default=False)
     data_handling = models.BooleanField(default=False)
+
+
+class suggested_subject(models.Model):
+    student = models.ForeignKey(User, on_delete=models.CASCADE)
+    suggested_subjects = models.CharField(max_length=500)

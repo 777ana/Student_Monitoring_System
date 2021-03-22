@@ -1,8 +1,11 @@
 from django.shortcuts import render, redirect
 from .models import test, student_score
+from subjects.models import subject, suggested_subject
 
 
 # Create your views here.
+
+
 def take_test(request):
     # if request.method=='POST':
     #
@@ -22,6 +25,8 @@ def take_test(request):
         co_curricular_involves_teamwork = request.POST['8']
         describe_your_strength = request.POST['9']
         job_do_you_prefer = request.POST['10']
+        love_to_get_insights = request.POST['11']
+        problem_like_to_solve = request.POST['12']
 
         # some variables
         organised = False
@@ -43,6 +48,9 @@ def take_test(request):
         technical = False
         entrepreneur = False
         versatility = False
+        path_finding = False
+        space = False
+        data_handling = False
 
         if is_conscientious == '3' or is_conscientious == '4':
             organised = True
@@ -66,7 +74,7 @@ def take_test(request):
             regularity = True
         elif best_describe_your_skillset == 'Spontaneity':
             efficiency = True
-        if job_do_you_prefer == 'Management':
+        if job_do_you_prefer == 'Management ':
             management = True
             business = True
         elif job_do_you_prefer == 'Technical':
@@ -85,11 +93,26 @@ def take_test(request):
         elif describe_your_strength == 'Logical Reasoning Explanation' or describe_your_strength == 'Crirtical Thinking':
             psa = True
 
+        if love_to_get_insights == 'Yes ':
+            data_handling = True
+        if problem_like_to_solve == "Crossword puzzles ":
+            memory = True
+        elif problem_like_to_solve == "Maze":
+            path_finding = True
+        elif problem_like_to_solve == "Mechanical puzzles":
+            space = True
+        elif problem_like_to_solve == "Logic puzzles":
+            psa = True
+
         result = {'organised': organised, 'stubborn': stubborn, 'introvert': introvert, 'extrovert': extrovert,
                   'agreeable': agreeable, 'passive': passive, 'creative': creative, 'unpredictable': unpredictable,
                   'neurotic': neurotic, 'regularity': regularity, 'efficiency': efficiency, 'teamwork': teamwork,
                   'memory': memory, 'psa': psa, 'business': business, 'management': management,
                   'technical': technical, 'entrepreneur': entrepreneur, 'versatility': versatility}
+
+        # import pdb
+        # pdb.set_trace()
+
         if not student_score.objects.filter(student_id=user_id).exists():
             student = student_score.objects.create(organised=organised, stubborn=stubborn, introvert=introvert,
                                                    extrovert=extrovert, agreeable=agreeable, passive=passive,
@@ -97,9 +120,44 @@ def take_test(request):
                                                    regularity=regularity, efficiency=efficiency, teamwork=teamwork,
                                                    memory=memory, psa=psa, business=business, management=management,
                                                    technical=technical, entrepreneur=entrepreneur,
-                                                   versatility=versatility, student_id=user_id)
+                                                   versatility=versatility, student_id=user_id, space=space,
+                                                   path_finding=path_finding, data_handling=data_handling)
             student.save()
             print("result_created")
+
+            # logic for adding suggested subjects
+
+            subject_arr = []
+
+            student_data = student_score.objects.filter(student_id=user_id).values()[0]
+            del student_data['id']
+            del student_data['student_id']
+
+            for ele in list(student_data):
+                if student_data[ele] == False:
+                    student_data.pop(ele)
+
+            n = len(subject.objects.values())
+            for i in range(1, n + 1):
+                subject_data = subject.objects.filter(id=i).values()[0]
+                temp_sub = subject_data
+                del temp_sub['id']
+                del temp_sub['subject_name']
+                for ele in list(temp_sub):
+                    if temp_sub[ele] == False:
+                        temp_sub.pop(ele)
+                if temp_sub.items() <= student_data.items():
+                    subject_arr.append(subject_data['subject_name'])
+
+            my_string = ','.join(subject_arr)
+
+            if not suggested_subject.objects.filter(student_id=user_id).exists():
+                new_data = suggested_subject.objects.create(student_id=user_id, suggested_subjects=my_string)
+                new_data.save()
+            else:
+                suggested_subject.objects.filter(student_id=user_id).update(suggested_subjects=my_string)
+
+            return redirect('dashboard')
         else:
             student_score.objects.filter(student_id=user_id).update(organised=organised, stubborn=stubborn,
                                                                     introvert=introvert,
@@ -112,7 +170,46 @@ def take_test(request):
                                                                     memory=memory, psa=psa, business=business,
                                                                     management=management,
                                                                     technical=technical, entrepreneur=entrepreneur,
-                                                                    versatility=versatility)
+                                                                    versatility=versatility, space=space,
+                                                                    path_finding=path_finding,
+                                                                    data_handling=data_handling)
+
+            # logic for adding suggested_subject
+
+            subject_arr = []
+
+            student_data = student_score.objects.filter(student_id=user_id).values()[0]
+            del student_data['id']
+            del student_data['student_id']
+
+            for ele in list(student_data):
+                if student_data[ele] == False:
+                    student_data.pop(ele)
+
+            n = len(subject.objects.values())
+            for i in range(1, n + 1):
+                subject_data = subject.objects.filter(id=i).values()[0]
+                temp_sub = subject_data
+                del temp_sub['id']
+                del temp_sub['subject_name']
+                for ele in list(temp_sub):
+                    if temp_sub[ele] == False:
+                        temp_sub.pop(ele)
+                if temp_sub.items() <= student_data.items():
+                    # import pdb
+                    # pdb.set_trace()
+                    subject_arr.append(subject.objects.filter(id=i).values()[0]['subject_name'])
+
+            my_string = ','.join(subject_arr)
+            print(my_string)
+            print(type(my_string))
+
+            if not suggested_subject.objects.filter(student_id=user_id).exists():
+                new_data = suggested_subject.objects.create(student_id=user_id, suggested_subjects=my_string)
+                new_data.save()
+            else:
+                suggested_subject.objects.filter(student_id=user_id).update(suggested_subjects=my_string)
+
             return redirect('dashboard')
 
     if request.method == 'GET':
