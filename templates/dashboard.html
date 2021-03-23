@@ -14,5 +14,18 @@
     <button><a href="/accounts/login">Login</a></button>
     {% endif %}
 
+    {% if subject %}
+        <h3>Here is the list of the suggested subjects based on your Initial Test:</h3>
+        <ol type="1">
+        {% for i in subject %}
+
+            <li>{{ i }}</li>
+
+
+        {% endfor %}
+         </ol>
+
+    {% endif %}
+
 </body>
 </html>

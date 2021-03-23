@@ -1,9 +1,12 @@
+import operator
+
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User, auth
 from django.contrib import messages
 
-
 # Create your views here.
+from init_test.models import student_score
+from subjects.models import suggested_subject, subject
 
 
 def register(request):
@@ -16,7 +19,7 @@ def register(request):
         if User.objects.filter(email=email).exists():
             messages.info(request, 'Email Taken')
             return redirect('register')
-        elif first_name is '' or email is '' or password is '' or username is '':
+        elif first_name == '' or email == '' or password == '' or username == '':
             messages.info(request, 'Re-enter Details')
             return redirect('register')
         elif User.objects.filter(username=username).exists():
@@ -57,4 +60,37 @@ def logout(request):
 
 
 def dashboard(request):
-    return render(request, 'dashboard.html')
+    user_id = request.user.id
+    if suggested_subject.objects.filter(student_id=user_id).exists():
+        global_map = {}
+        student_data = student_score.objects.filter(student_id=user_id).values()[0]
+        del student_data['id']
+        del student_data['student_id']
+
+        for ele in list(student_data):
+            if student_data[ele] == False:
+                student_data.pop(ele)
+
+        n = len(subject.objects.values())
+        for i in range(1, n + 1):
+            subject_data = subject.objects.filter(id=i).values()[0]
+            del subject_data['id']
+            del subject_data['subject_name']
+
+            all_keys = list(student_data.keys())
+
+            counter1 = 0
+
+            for ele in all_keys:
+                if subject_data[ele]:
+                    counter1 += 1
+
+            global_map[subject.objects.filter(id=i).values()[0]['subject_name']] = counter1
+
+        global_map = dict(sorted(global_map.items(), key=operator.itemgetter(1)))
+        global_arr = list(global_map.keys())
+        global_arr.reverse()
+
+        return render(request, 'dashboard.html', {'subject': global_arr[:4]})
+    else:
+        return render(request, 'dashboard.html')
