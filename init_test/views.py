@@ -1,3 +1,5 @@
+import operator
+
 from django.shortcuts import render, redirect
 from .models import test, student_score
 from subjects.models import subject, suggested_subject
@@ -129,6 +131,7 @@ def take_test(request):
 
             subject_arr = []
 
+            global_map = {}
             student_data = student_score.objects.filter(student_id=user_id).values()[0]
             del student_data['id']
             del student_data['student_id']
@@ -140,16 +143,23 @@ def take_test(request):
             n = len(subject.objects.values())
             for i in range(1, n + 1):
                 subject_data = subject.objects.filter(id=i).values()[0]
-                temp_sub = subject_data
-                del temp_sub['id']
-                del temp_sub['subject_name']
-                for ele in list(temp_sub):
-                    if temp_sub[ele] == False:
-                        temp_sub.pop(ele)
-                if temp_sub.items() <= student_data.items():
-                    subject_arr.append(subject_data['subject_name'])
+                del subject_data['id']
+                del subject_data['subject_name']
+                all_keys = list(student_data.keys())
 
-            my_string = ','.join(subject_arr)
+                counter1 = 0
+
+                for ele in all_keys:
+                    if subject_data[ele]:
+                        counter1 += 1
+
+                global_map[subject.objects.filter(id=i).values()[0]['subject_name']] = counter1
+            global_map = dict(sorted(global_map.items(), key=operator.itemgetter(1)))
+
+            print(global_map)
+            my_string = list(global_map)[-1]
+            print(my_string)
+            print(type(my_string))
 
             if not suggested_subject.objects.filter(student_id=user_id).exists():
                 new_data = suggested_subject.objects.create(student_id=user_id, suggested_subjects=my_string)
@@ -177,7 +187,7 @@ def take_test(request):
             # logic for adding suggested_subject
 
             subject_arr = []
-
+            global_map = {}
             student_data = student_score.objects.filter(student_id=user_id).values()[0]
             del student_data['id']
             del student_data['student_id']
@@ -189,18 +199,23 @@ def take_test(request):
             n = len(subject.objects.values())
             for i in range(1, n + 1):
                 subject_data = subject.objects.filter(id=i).values()[0]
-                temp_sub = subject_data
-                del temp_sub['id']
-                del temp_sub['subject_name']
-                for ele in list(temp_sub):
-                    if temp_sub[ele] == False:
-                        temp_sub.pop(ele)
-                if temp_sub.items() <= student_data.items():
-                    # import pdb
-                    # pdb.set_trace()
-                    subject_arr.append(subject.objects.filter(id=i).values()[0]['subject_name'])
+                del subject_data['id']
+                del subject_data['subject_name']
 
-            my_string = ','.join(subject_arr)
+                all_keys = list(student_data.keys())
+
+                counter1 = 0
+
+                for ele in all_keys:
+                    if subject_data[ele]:
+                        counter1 += 1
+
+                global_map[subject.objects.filter(id=i).values()[0]['subject_name']] = counter1
+
+            global_map = dict(sorted(global_map.items(), key=operator.itemgetter(1)))
+
+            print(global_map)
+            my_string = list(global_map)[-1]
             print(my_string)
             print(type(my_string))
 
